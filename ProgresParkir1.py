@@ -1,7 +1,7 @@
-import time
+import datetime
 
 waktu = []
-kendaraan_masuk = {}
+kendaraan_masuk = []
 
 pin_admin_parkir = "1234"
 
@@ -15,15 +15,19 @@ def input_pin():
 
 def kendaraan_masuk_area_parkir():
     nomor_plat = input("\nMasukkan nomor/plat kendaraan (contoh: D1234AF): ")
-    waktu_masuk = time.time()
-    kendaraan_masuk[nomor_plat] = {'waktu_masuk': waktu_masuk}
+    waktu_masuk = datetime.datetime.now()
+    kendaraan_masuk.append({
+        'platnomor': nomor_plat, 
+        'waktu_masuk': waktu_masuk
+    })
+    print("Waktu masuk :" , waktu_masuk)
     print("Gerbang masuk terbuka. Silahkan masuk.")
 
 def kendaraan_keluar_area_parkir():
     nomor_plat = input("\nMasukkan nomor/plat kendaraan (contoh: D1234AF): ")
     if nomor_plat in kendaraan_masuk:
         waktu_masuk = kendaraan_masuk[nomor_plat]['waktu_masuk']
-        waktu_keluar = time.time()
+        waktu_keluar = datetime.datetime.now()
         durasi_parkir_detik = int(waktu_keluar - waktu_masuk)
         durasidetik = durasi_parkir_detik + (60 - durasi_parkir_detik % 60)
         if durasidetik <= 60:
@@ -39,6 +43,8 @@ def kendaraan_keluar_area_parkir():
         del kendaraan_masuk[nomor_plat]
     else:
         print("Nomor plat tidak ditemukan.")
+    
+
 
 # def hitung_biaya_parkir(durasi_detik):
 #     if durasi_detik > 60:
@@ -62,17 +68,19 @@ while True:
         kendaraan_keluar_area_parkir()
 
     elif pilih_menu == 3:
-        elif pilih_menu == 3:
         if input_pin():
             print("\n=== MENU ADMIN ===")
             print("1. Lihat List kendaraan")
             print("2. Kembali ke Menu Utama")
+            print("3. Exit")
             pilih_menu_admin = int(input("Pilih menu admin: "))
             if pilih_menu_admin == 1:
                 print("\n=== LIST nomor plat ===")
                 for i, parkir in enumerate(waktu, start=1):
                     print(f"{i}. Nomor Plat : {parkir['platnomor']} | Waktu Input : {parkir['inputwaktu']}")
-        elif pilih_menu_admin == 2:
-            pass
+            elif pilih_menu_admin == 2:
+                pass
+            elif pilih_menu_admin == 3:
+                exit()
         else:
-            print("Pilihan tidak valid. Silakan pilih menu yang benar.")
+            print("Pilihan tidak valid. Silakan pilih menu yang benar.") 
