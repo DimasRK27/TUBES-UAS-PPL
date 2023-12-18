@@ -13,10 +13,16 @@ def input_pin():
     if pin_input == pin_admin_parkir:
         print("Menu Admin Parkir:")
         print("1. Riwayat Transaksi Parkir")
+        print("2. Kembali ke Menu Utama")
+        print("3. Exit")
         # Tambahkan menu admin lainnya di sini
-        pilihan_admin = input("Pilih menu admin (1/2/...): ")
+        pilihan_admin = input("Pilih menu admin (1/2/3): ")
         if pilihan_admin == "1":
             tampilkan_kendaraan_masuk()
+        elif pilihan_admin == "2":
+             menu_utama()
+        elif pilihan_admin == "3":
+            exit()
     else:
         print("PIN Admin Parkir salah.")
 
@@ -43,16 +49,6 @@ def kendaraan_keluar_area_parkir():
     else:
     # Pembulatan waktu parkir ke kelipatan 60 detik
         durasi_parkir = math.ceil(durasi_parkir / 60) * 60
-
-    #if durasi_parkir < 60:
-        #durasi_parkir = 60  # Pembulatan waktu parkir ke 60 detik jika kurang dari 60 detik
-   #elif durasi_parkir >= 61 and durasi_parkir < 120:
-        #durasi_parkir = 120
-    #elif durasi_parkir >= 121 and durasi_parkir < 180:
-        #durasi_parkir = 180
-    #elif durasi_parkir >= 181 and durasi_parkir < 240:
-        #durasi_parkir = 240
-
     biaya_parkir = (durasi_parkir / 60) * tarif_per_detik
 
     if durasi_parkir >= 240:
@@ -95,33 +91,32 @@ def tampilkan_kendaraan_masuk():
         print("=" * 30)
 
 
+def menu_utama():
+    while True:
+        print("\n=== MENU PARKIR ===")
+        print("1. Masuk area parkir")
+        print("2. Keluar area parkir")
+        print("3. Admin parkir")
+        pilih_menu = int(input("Pilih menu parkir (1/2/3): "))
+
+        if pilih_menu == 1:
+            kendaraan_masuk_area_parkir()
+
+        elif pilih_menu == 2:
+            kendaraan_keluar_area_parkir()
+
+        elif pilih_menu == 3:
+             input_pin()
+
+        else:
+            print("Pilihan tidak valid. Silakan pilih menu yang benar.")
+
 while True:
-    print("\n=== MENU PARKIR ===")
-    print("1. Masuk area parkir")
-    print("2. Keluar area parkir")
-    print("3. Admin parkir")
-    pilih_menu = int(input("Pilih menu parkir (1/2/3): "))
-
-    if pilih_menu == 1:
-        kendaraan_masuk_area_parkir()
-
-    elif pilih_menu == 2:
-        kendaraan_keluar_area_parkir()
-
-    elif pilih_menu == 3:
-        if input_pin():
-            print("\n=== MENU ADMIN ===")
-            print("1. Lihat List kendaraan")
-            print("2. Kembali ke Menu Utama")
-            print("3. Exit")
-            pilih_menu_admin = int(input("Pilih menu admin: "))
-            if pilih_menu_admin == 1:
-                print("\n=== LIST nomor plat ===")
-                for i, parkir in enumerate(waktu, start=1):
-                    print(f"{i}. Nomor Plat : {parkir['platnomor']} | Waktu Input : {parkir['inputwaktu']}")
-            elif pilih_menu_admin == 2:
-                pass
-            elif pilih_menu_admin == 3:
-                exit()
+    Pilih = int(input("\nApakah Anda Ingin Memulai Program Parkir? \n\n1.Ya\n2.Tidak\n\npilih Dulu ya!: "))
+    if (Pilih == 1):
+        menu_utama()
+    elif (Pilih == 2):
+        print ("\nSEE YOU!!")
+        break
     else:
-        print("Pilihan tidak valid. Silakan pilih menu yang benar.")
+        print ("\nPilihan Tidak Ada Ya Silahkan Cek Lagi")
