@@ -22,6 +22,7 @@ def input_pin():
         elif pilihan_admin == "2":
              menu_utama()
         elif pilihan_admin == "3":
+            print("\nSEE YOU!!")
             exit()
     else:
         print("PIN Admin Parkir salah.")
