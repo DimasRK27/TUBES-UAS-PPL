@@ -64,6 +64,11 @@ def kendaraan_keluar_area_parkir():
 
     if nominal_pembayaran >= biaya_parkir:
         print("Terima Kasih. Gerbang keluar terbuka.")
+        if nominal_pembayaran > biaya_parkir:
+            kembalian = nominal_pembayaran - biaya_parkir
+            print (f"Kembalian RP {kembalian}")
+        else:
+            pass
         del kendaraan_masuk[nomor_kendaraan]
 
         # Menambahkan informasi transaksi ke riwayat
@@ -73,7 +78,8 @@ def kendaraan_keluar_area_parkir():
             'waktu_keluar': waktu_keluar,
             'durasi_parkir': durasi_parkir,
             'biaya_parkir': biaya_parkir,
-            'nominal_pembayaran': nominal_pembayaran
+            'nominal_pembayaran': nominal_pembayaran,
+            'kembalian': kembalian
         })
 
     else:
@@ -89,6 +95,7 @@ def tampilkan_kendaraan_masuk():
         print(f"Durasi Parkir: {transaksi['durasi_parkir']} detik")
         print(f"Biaya Parkir: Rp {int(transaksi['biaya_parkir'])}")
         print(f"Nominal Pembayaran: Rp {transaksi['nominal_pembayaran']}")
+        print(f"Kembalian: Rp {transaksi['kembalian']}")
         print("=" * 30)
 
 
