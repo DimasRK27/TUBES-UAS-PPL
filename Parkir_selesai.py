@@ -9,8 +9,10 @@ denda_6_menit = 0.25
 pin_admin_parkir = "1234"
 
 def input_pin():
-    pin_input = input("Masukkan PIN Admin Parkir: ")
-    if pin_input == pin_admin_parkir:
+    try:
+        pin_input = input("Masukkan PIN Admin Parkir: ")
+        if pin_input != pin_admin_parkir:
+            raise ValueError("PIN Admin Parkir salah.")
         print("Menu Admin Parkir:")
         print("1. Riwayat Transaksi Parkir")
         print("2. Kembali ke Menu Utama")
@@ -24,9 +26,11 @@ def input_pin():
         elif pilihan_admin == "3":
             print("\nSEE YOU!!")
             exit()
-    else:
-        print("PIN Admin Parkir salah.")
-
+        else:
+            print("PIN Admin Parkir salah.")
+    except ValueError as e:
+        print(f"Error: {e}")
+        
 def kendaraan_masuk_area_parkir():
     nomor_kendaraan = input("Masukkan nomor/plat kendaraan: ")
     waktu_masuk = datetime.datetime.now()
