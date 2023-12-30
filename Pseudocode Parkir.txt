@@ -1,0 +1,161 @@
+import datetime
+import math
+
+waktu = []
+kendaraan_masuk = {}
+tarif_per_detik = 10000  # Tarif parkir per 60 detik
+denda_4_menit = 0.1
+denda_6_menit = 0.25
+pin_admin_parkir = 1234
+kembalian = 0  # Inisialisasi kembalian 
+
+Fungsi input_pin():
+    Selama Benar:
+        coba:
+            pin_input = int(input("Masukkan PIN Admin Parkir: "))
+            jika pin_input != pin_admin_parkir:
+                raise ValueError("PIN Admin Parkir salah.")
+            cetak("Menu Admin Parkir:")
+            cetak("1. List Data Kendaraan")
+            cetak("2. Riwayat Transaksi Parkir")
+            cetak("3. Kembali ke Menu Utama")
+            cetak("4. Exit")
+            pilihan_admin = int(input("Pilih menu admin (1/2/3/4): "))
+            jika pilihan_admin == 1:
+                list_kendaraan()
+            lainnya:
+                jika pilihan_admin == 2:
+                    tampilkan_kendaraan_masuk()
+                lainnya:
+                    jika pilihan_admin == 3:
+                        menu_utama()
+                    lainnya:
+                        jika pilihan_admin == 4:
+                            cetak("\nSAMPAI JUMPA!!")
+                            keluar()
+                        lainnya:
+                            cetak("Pilih menu yang ada!")
+            istirahat
+        kecuali ValueError as e:
+            cetak(f"Error: {e}")
+
+Fungsi list_kendaraan():
+    untuk i, (nomor_kendaraan, data_kendaraan) dalam enumerate(kendaraan_masuk.items(), mulai=1):
+        waktu_masuk = data_kendaraan['waktu_masuk']
+        cetak(f"{i}. Nomor Plat: {nomor_kendaraan} | Waktu Masuk: {waktu_masuk}")
+
+Fungsi kendaraan_masuk_area_parkir():
+    Selama Benar:
+        nomor_kendaraan = input("Masukkan nomor/plat kendaraan: ")
+
+        jika len(nomor_kendaraan) > 6:
+            cetak("Error: Nomor plat kendaraan tidak boleh lebih dari 6 karakter. Silahkan coba lagi.")
+        lainnya:
+            waktu_masuk = datetime.datetime.now()
+            kendaraan_masuk[nomor_kendaraan] = {'waktu_masuk': waktu_masuk}
+            cetak("Waktu masuk:", waktu_masuk)
+            cetak("Gerbang masuk terbuka. Silahkan masuk.")
+            istirahat  # Keluar dari loop jika nomor plat valid
+
+Fungsi kendaraan_keluar_area_parkir():
+    nomor_kendaraan = input("Masukkan nomor/plat kendaraan: ")
+
+    jika nomor_kendaraan not in kendaraan_masuk:
+        cetak("Error: Kendaraan tidak terdaftar dalam area parkir.")
+        kembali
+
+    waktu_keluar = datetime.datetime.now()
+    waktu_masuk = kendaraan_masuk[nomor_kendaraan]['waktu_masuk']
+    durasi_parkir = (waktu_keluar - waktu_masuk).total_seconds()
+
+    jika durasi_parkir < 60:
+        durasi_parkir = 60
+    lainnya:
+        # Pembulatan waktu parkir ke kelipatan 60 detik
+        durasi_parkir = math.ceil(durasi_parkir / 60) * 60
+
+    biaya_parkir = (durasi_parkir / 60) * tarif_per_detik
+
+    # Check jika denda berlaku
+    denda = 0
+    jika durasi_parkir >= 240:
+        denda = biaya_parkir * denda_4_menit
+        jika durasi_parkir >= 360:
+            denda = biaya_parkir * denda_6_menit
+
+    total_biaya = biaya_parkir + denda
+
+    selama Benar:
+        cetak(f"Biaya parkir untuk kendaraan dengan nomor {nomor_kendaraan}: Rp {int(total_biaya)}")
+
+        jika denda > 0:
+            cetak(f"NOTIFIKASI: Anda terkena denda sebesar Rp {int(denda)} karena melebihi waktu parkir.")
+
+        nominal_pembayaran = int(input("Masukkan nominal pembayaran: "))
+        jika nominal_pembayaran >= total_biaya:
+            cetak("Terima Kasih. Gerbang keluar terbuka.")
+            jika nominal_pembayaran > total_biaya:
+                kembalian = nominal_pembayaran - total_biaya
+                cetak(f"Kembalian RP {kembalian}")
+            lainnya:
+                kembalian = 0
+            hapus kendaraan_masuk[nomor_kendaraan]
+
+            # Menambahkan informasi transaksi ke riwayat
+            waktu.append({
+                'nomor_kendaraan': nomor_kendaraan,
+                'waktu_masuk': waktu_masuk,
+                'waktu_keluar': waktu_keluar,
+                'durasi_parkir': durasi_parkir,
+                'biaya_parkir': total_biaya,
+                'nominal_pembayaran': nominal_pembayaran,
+                'kembalian': kembalian,
+                'denda': denda  # Menambahkan denda ke riwayat transaksi
+            })
+            istirahat  # Keluar dari loop pembayaran
+        lain:
+            cetak("Pembayaran kurang. Silahkan masukkan pembayaran yang cukup.")
+
+Fungsi tampilkan_kendaraan_masuk():
+    cetak("\n===== Riwayat Transaksi Parkir =====")
+    untuk transaksi dalam waktu:
+        cetak(f"Nomor Kendaraan: {transaksi['nomor_kendaraan']}")
+        cetak(f"Waktu Masuk: {transaksi['waktu_masuk']}")
+        cetak(f"Waktu Keluar: {transaksi['waktu_keluar']}")
+        cetak(f"Durasi Parkir: {transaksi['durasi_parkir']} detik")
+        cetak(f"Biaya Parkir: Rp {int(transaksi['biaya_parkir'])}")
+        cetak(f"Denda: Rp {int(transaksi['denda'])}")
+        cetak(f"Nominal Pembayaran: Rp {transaksi['nominal_pembayaran']}")
+        cetak(f"Kembalian: Rp {transaksi['kembalian']}")
+        cetak("=" * 30)
+
+Fungsi menu_utama():
+    selama Benar:
+        cetak("\n=== MENU PARKIR ===")
+        cetak("1. Masuk area parkir")
+        cetak("2. Keluar area parkir")
+        cetak("3. Admin parkir")
+        pilih_menu = int(input("Pilih menu parkir (1/2/3): "))
+
+        jika pilih_menu == 1:
+            kendaraan_masuk_area_parkir()
+        lainnya:
+            jika pilih_menu == 2:
+                kendaraan_keluar_area_parkir()
+            lain:
+                jika pilih_menu == 3:
+                    input_pin()
+                lain:
+                    cetak("Pilihan tidak valid. Silakan pilih menu yang benar.")
+
+# Program Utama
+selama Benar:
+    pilih = int(input("\nApakah Anda Ingin Memulai Program Parkir? \n\n1.Ya\n2.Tidak\n\nPilih Dulu ya!: "))
+    jika (pilih == 1):
+        menu_utama()
+    lainnya (pilih == 2):
+        cetak("\nSAMPAI JUMPA!!")
+        istirahat
+    lainnya:
+        cetak("\nPilihan Tidak Ada, Silahkan Cek Lagi")
+
