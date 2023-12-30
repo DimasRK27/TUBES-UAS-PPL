@@ -10,30 +10,32 @@ pin_admin_parkir = 1234
 kembalian = 0  # Inisialisasi kembalian 
 
 def input_pin():
-    try:
-        pin_input = int(input("Masukkan PIN Admin Parkir: "))
-        if pin_input != pin_admin_parkir:
-            raise ValueError("PIN Admin Parkir salah.")
-        print("Menu Admin Parkir:")
-        print("1. List Data Kendaraan")
-        print("2. Riwayat Transaksi Parkir")
-        print("3. Kembali ke Menu Utama")
-        print("4. Exit")
-        # Tambahkan menu admin lainnya di sini
-        pilihan_admin = int(input("Pilih menu admin (1/2/3/4): "))
-        if pilihan_admin == 1:
-            list_kendaraan()
-        elif pilihan_admin == 2:
-            tampilkan_kendaraan_masuk()
-        elif pilihan_admin == 3:
-            menu_utama()
-        elif pilihan_admin == 4:
-            print("\nSEE YOU!!")
-            exit()
-        else:
-            print("Pilih menu yang ada!")
-    except ValueError as e:
-        print(f"Error: {e}")
+    while True:
+        try:
+            pin_input = int(input("Masukkan PIN Admin Parkir: "))
+            if pin_input != pin_admin_parkir:
+                raise ValueError("PIN Admin Parkir salah.",)
+            print("Menu Admin Parkir:")
+            print("1. List Data Kendaraan")
+            print("2. Riwayat Transaksi Parkir")
+            print("3. Kembali ke Menu Utama")
+            print("4. Exit")
+            # Tambahkan menu admin lainnya di sini
+            pilihan_admin = int(input("Pilih menu admin (1/2/3/4): "))
+            if pilihan_admin == 1:
+                list_kendaraan()
+            elif pilihan_admin == 2:
+                tampilkan_kendaraan_masuk()
+            elif pilihan_admin == 3:
+                menu_utama()
+            elif pilihan_admin == 4:
+                print("\nSEE YOU!!")
+                exit()
+            else:
+                print("Pilih menu yang ada!")
+            break  
+        except ValueError as e:
+            print(f"Error: {e}")
 
 def list_kendaraan():
      for i, (nomor_kendaraan, data_kendaraan) in enumerate(kendaraan_masuk.items(), start=1):
@@ -41,11 +43,17 @@ def list_kendaraan():
         print(f"{i}. Nomor Plat: {nomor_kendaraan} | Waktu Masuk: {waktu_masuk}")
 
 def kendaraan_masuk_area_parkir():
-    nomor_kendaraan = input("Masukkan nomor/plat kendaraan: ")
-    waktu_masuk = datetime.datetime.now()
-    kendaraan_masuk[nomor_kendaraan] = {'waktu_masuk': waktu_masuk}
-    print("Waktu masuk :", waktu_masuk)
-    print("Gerbang masuk terbuka. Silahkan masuk.")
+    while True:
+        nomor_kendaraan = input("Masukkan nomor/plat kendaraan: ")
+
+        if len(nomor_kendaraan) > 6:
+            print("Error: Nomor plat kendaraan tidak boleh lebih dari 6 karakter. Silahkan coba lagi.")
+        else:
+            waktu_masuk = datetime.datetime.now()
+            kendaraan_masuk[nomor_kendaraan] = {'waktu_masuk': waktu_masuk}
+            print("Waktu masuk:", waktu_masuk)
+            print("Gerbang masuk terbuka. Silahkan masuk.")
+            break  # Keluar dari loop jika nomor plat valid
 
 def kendaraan_keluar_area_parkir():
     nomor_kendaraan = input("Masukkan nomor/plat kendaraan: ")
@@ -75,35 +83,36 @@ def kendaraan_keluar_area_parkir():
 
     total_biaya = biaya_parkir + denda
 
-    print(f"Biaya parkir untuk kendaraan dengan nomor {nomor_kendaraan}: Rp {int(total_biaya)}")
+    while True:
+        print(f"Biaya parkir untuk kendaraan dengan nomor {nomor_kendaraan}: Rp {int(total_biaya)}")
 
-    if denda > 0:
-        print(f"NOTIFIKASI: Anda terkena denda sebesar Rp {int(denda)} karena melebihi waktu parkir.")
+        if denda > 0:
+            print(f"NOTIFIKASI: Anda terkena denda sebesar Rp {int(denda)} karena melebihi waktu parkir.")
 
-    nominal_pembayaran = int(input("Masukkan nominal pembayaran: "))
-    if nominal_pembayaran >= total_biaya:
-        print("Terima Kasih. Gerbang keluar terbuka.")
-        if nominal_pembayaran > total_biaya:
-            kembalian = nominal_pembayaran - total_biaya
-            print(f"Kembalian RP {kembalian}")
+        nominal_pembayaran = int(input("Masukkan nominal pembayaran: "))
+        if nominal_pembayaran >= total_biaya:
+            print("Terima Kasih. Gerbang keluar terbuka.")
+            if nominal_pembayaran > total_biaya:
+                kembalian = nominal_pembayaran - total_biaya
+                print(f"Kembalian RP {kembalian}")
+            else:
+                kembalian = 0
+            del kendaraan_masuk[nomor_kendaraan]
+
+            # Menambahkan informasi transaksi ke riwayat
+            waktu.append({
+                'nomor_kendaraan': nomor_kendaraan,
+                'waktu_masuk': waktu_masuk,
+                'waktu_keluar': waktu_keluar,
+                'durasi_parkir': durasi_parkir,
+                'biaya_parkir': total_biaya,
+                'nominal_pembayaran': nominal_pembayaran,
+                'kembalian': kembalian,
+                'denda': denda  # Added denda to the transaction history
+            })
+            break  # Keluar dari loop pembayaran
         else:
-            kembalian = 0
-        del kendaraan_masuk[nomor_kendaraan]
-
-        # Menambahkan informasi transaksi ke riwayat
-        waktu.append({
-            'nomor_kendaraan': nomor_kendaraan,
-            'waktu_masuk': waktu_masuk,
-            'waktu_keluar': waktu_keluar,
-            'durasi_parkir': durasi_parkir,
-            'biaya_parkir': total_biaya,
-            'nominal_pembayaran': nominal_pembayaran,
-            'kembalian': kembalian,
-            'denda': denda  # Added denda to the transaction history
-        })
-
-    else:
-        print("Pembayaran kurang. Silahkan melakukan pembayaran yang cukup.")
+            print("Pembayaran kurang. Silahkan masukkan pembayaran yang cukup.")
 
 def tampilkan_kendaraan_masuk():
     print("\n===== Riwayat Transaksi Parkir =====")
