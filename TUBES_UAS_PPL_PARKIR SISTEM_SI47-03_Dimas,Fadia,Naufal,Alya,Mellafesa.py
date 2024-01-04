@@ -53,7 +53,7 @@ def kendaraan_masuk_area_parkir():
 
         #Pengecekan Nomer Plat Apakah Sesuai
         if len(nomor_kendaraan) > 8:
-            print("Error: Nomor plat kendaraan tidak boleh lebih dari 6 karakter. Silahkan coba lagi.")
+            print("Error: Nomor plat kendaraan tidak boleh lebih dari 8 karakter. Silahkan coba lagi.")
         else:
             waktu_masuk = datetime.datetime.now()
             kendaraan_masuk[nomor_kendaraan] = {'waktu_masuk': waktu_masuk}
