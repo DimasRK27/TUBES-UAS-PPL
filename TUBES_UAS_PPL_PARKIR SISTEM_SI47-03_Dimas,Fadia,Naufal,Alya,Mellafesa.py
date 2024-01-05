@@ -18,27 +18,26 @@ def input_pin():
             if pin_input != pin_admin_parkir:
                 raise ValueError("PIN Admin Parkir salah.",)
             
-            else:
-                print("Menu Admin Parkir:")
-                print("1. List Data Kendaraan")
-                print("2. Riwayat Transaksi Parkir")
-                print("3. Kembali ke Menu Utama")
-                print("4. Exit")
+            print("Menu Admin Parkir:")
+            print("1. List Data Kendaraan")
+            print("2. Riwayat Transaksi Parkir")
+            print("3. Kembali ke Menu Utama")
+            print("4. Exit")
 
-                #Percabangan Pemilihan Pada Menu Admin
-                pilihan_admin = int(input("Pilih menu admin (1/2/3/4): "))
-                if pilihan_admin == 1:
-                    list_kendaraan()
-                elif pilihan_admin == 2:
-                    tampilkan_kendaraan_masuk()
-                elif pilihan_admin == 3:
-                    menu_utama()
-                elif pilihan_admin == 4:
-                    print("\nSEE YOU!!")
-                    exit()
-                else:
-                    print("Pilih menu yang ada!")
-                break  
+            #Percabangan Pemilihan Pada Menu Admin
+            pilihan_admin = int(input("Pilih menu admin (1/2/3/4): "))
+            if pilihan_admin == 1:
+                list_kendaraan()
+            elif pilihan_admin == 2:
+                tampilkan_kendaraan_masuk()
+            elif pilihan_admin == 3:
+                menu_utama()
+            elif pilihan_admin == 4:
+                print("\nSEE YOU!!")
+                exit()
+            else:
+                print("Pilih menu yang ada!")
+            break  
         except ValueError as e:
             print(f"Error: {e}")
 
