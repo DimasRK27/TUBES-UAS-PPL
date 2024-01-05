@@ -17,26 +17,28 @@ def input_pin():
             pin_input = int(input("Masukkan PIN Admin Parkir: "))
             if pin_input != pin_admin_parkir:
                 raise ValueError("PIN Admin Parkir salah.",)
-            print("Menu Admin Parkir:")
-            print("1. List Data Kendaraan")
-            print("2. Riwayat Transaksi Parkir")
-            print("3. Kembali ke Menu Utama")
-            print("4. Exit")
-
-            #Percabangan Pemilihan Pada Menu Admin
-            pilihan_admin = int(input("Pilih menu admin (1/2/3/4): "))
-            if pilihan_admin == 1:
-                list_kendaraan()
-            elif pilihan_admin == 2:
-                tampilkan_kendaraan_masuk()
-            elif pilihan_admin == 3:
-                menu_utama()
-            elif pilihan_admin == 4:
-                print("\nSEE YOU!!")
-                exit()
+            
             else:
-                print("Pilih menu yang ada!")
-            break  
+                print("Menu Admin Parkir:")
+                print("1. List Data Kendaraan")
+                print("2. Riwayat Transaksi Parkir")
+                print("3. Kembali ke Menu Utama")
+                print("4. Exit")
+
+                #Percabangan Pemilihan Pada Menu Admin
+                pilihan_admin = int(input("Pilih menu admin (1/2/3/4): "))
+                if pilihan_admin == 1:
+                    list_kendaraan()
+                elif pilihan_admin == 2:
+                    tampilkan_kendaraan_masuk()
+                elif pilihan_admin == 3:
+                    menu_utama()
+                elif pilihan_admin == 4:
+                    print("\nSEE YOU!!")
+                    exit()
+                else:
+                    print("Pilih menu yang ada!")
+                break  
         except ValueError as e:
             print(f"Error: {e}")
 
@@ -68,58 +70,58 @@ def kendaraan_keluar_area_parkir():
     if nomor_kendaraan not in kendaraan_masuk:
         print("Error: Kendaraan tidak terdaftar dalam area parkir.")
         return
-
-    waktu_keluar = datetime.datetime.now()
-    waktu_masuk = kendaraan_masuk[nomor_kendaraan]['waktu_masuk']
-    durasi_parkir = (waktu_keluar - waktu_masuk).total_seconds()
-
-    if durasi_parkir < 60:
-        durasi_parkir = 60
     else:
-        #Pembulatan waktu parkir ke kelipatan 60 detik
-        durasi_parkir = math.ceil(durasi_parkir / 60) * 60
+        waktu_keluar = datetime.datetime.now()
+        waktu_masuk = kendaraan_masuk[nomor_kendaraan]['waktu_masuk']
+        durasi_parkir = (waktu_keluar - waktu_masuk).total_seconds()
 
-    biaya_parkir = (durasi_parkir / 60) * tarif_per_detik
-
-    #Pengecekan Denda
-    denda = 0
-    if durasi_parkir >= 240:
-        denda = biaya_parkir * denda_4_menit
-        if durasi_parkir >= 360:
-            denda = biaya_parkir * denda_6_menit
-
-    total_biaya = biaya_parkir + denda
-
-    while True:
-        print(f"Biaya parkir untuk kendaraan dengan nomor {nomor_kendaraan}: Rp {int(total_biaya)}")
-
-        if denda > 0:
-            print(f"NOTIFIKASI: Anda terkena denda sebesar Rp {int(denda)} karena melebihi waktu parkir.")
-
-        nominal_pembayaran = int(input("Masukkan nominal pembayaran: "))
-        if nominal_pembayaran >= total_biaya:
-            print("Terima Kasih. Gerbang keluar terbuka.")
-            if nominal_pembayaran > total_biaya:
-                kembalian = nominal_pembayaran - total_biaya
-                print(f"Kembalian RP {kembalian}")
-            else:
-                kembalian = 0
-            del kendaraan_masuk[nomor_kendaraan]
-
-            #Menambahkan informasi transaksi ke riwayat
-            waktu.append({
-                'nomor_kendaraan': nomor_kendaraan,
-                'waktu_masuk': waktu_masuk,
-                'waktu_keluar': waktu_keluar,
-                'durasi_parkir': durasi_parkir,
-                'biaya_parkir': total_biaya,
-                'nominal_pembayaran': nominal_pembayaran,
-                'kembalian': kembalian,
-                'denda': denda
-            })
-            break
+        if durasi_parkir < 60:
+            durasi_parkir = 60
         else:
-            print("Pembayaran kurang. Silahkan masukkan pembayaran yang cukup.")
+            #Pembulatan waktu parkir ke kelipatan 60 detik
+            durasi_parkir = math.ceil(durasi_parkir / 60) * 60
+
+        biaya_parkir = (durasi_parkir / 60) * tarif_per_detik
+
+        #Pengecekan Denda
+        denda = 0
+        if durasi_parkir >= 240:
+            denda = biaya_parkir * denda_4_menit
+            if durasi_parkir >= 360:
+                denda = biaya_parkir * denda_6_menit
+
+        total_biaya = biaya_parkir + denda
+
+        while True:
+            print(f"Biaya parkir untuk kendaraan dengan nomor {nomor_kendaraan}: Rp {int(total_biaya)}")
+
+            if denda > 0:
+                print(f"NOTIFIKASI: Anda terkena denda sebesar Rp {int(denda)} karena melebihi waktu parkir.")
+
+            nominal_pembayaran = int(input("Masukkan nominal pembayaran: "))
+            if nominal_pembayaran >= total_biaya:
+                print("Terima Kasih. Gerbang keluar terbuka.")
+                if nominal_pembayaran > total_biaya:
+                    kembalian = nominal_pembayaran - total_biaya
+                    print(f"Kembalian RP {kembalian}")
+                else:
+                    kembalian = 0
+                del kendaraan_masuk[nomor_kendaraan]
+
+                #Menambahkan informasi transaksi ke riwayat
+                waktu.append({
+                    'nomor_kendaraan': nomor_kendaraan,
+                    'waktu_masuk': waktu_masuk,
+                    'waktu_keluar': waktu_keluar,
+                    'durasi_parkir': durasi_parkir,
+                    'biaya_parkir': total_biaya,
+                    'nominal_pembayaran': nominal_pembayaran,
+                    'kembalian': kembalian,
+                    'denda': denda
+                })
+                break
+            else:
+                print("Pembayaran kurang. Silahkan masukkan pembayaran yang cukup.")
 
 #Fungsi Untuk Riwayat Transaksi Di Menu Admin
 def tampilkan_kendaraan_masuk():
@@ -142,14 +144,14 @@ def menu_utama():
         print("1. Masuk area parkir")
         print("2. Keluar area parkir")
         print("3. Admin parkir")
-        pilih_menu = int(input("Pilih menu parkir (1/2/3): "))
+        pilih_menu = (input("Pilih menu parkir (1/2/3): "))
 
         #Percabangan Pemilihan Di Menu Utama
-        if pilih_menu == 1:
+        if pilih_menu == "1":
             kendaraan_masuk_area_parkir()
-        elif pilih_menu == 2:
+        elif pilih_menu == "2":
             kendaraan_keluar_area_parkir()
-        elif pilih_menu == 3:
+        elif pilih_menu == "3":
              input_pin()
         else:
             print("Pilihan tidak valid. Silakan pilih menu yang benar.")
